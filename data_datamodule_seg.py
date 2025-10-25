@@ -2,8 +2,7 @@ from dataset_seg import WSIDataset
 import lightning as L
 from torch.utils.data import DataLoader
 import torchvision.transforms.v2 as transforms
-from transforms_seg import ToTensor, Rescale
-#torchio
+from transforms_seg import ToTensor
 
 class WSIDataModule(L.LightningDataModule):
     def __init__(self,batch_size=2, workers=1,train_file=None, dev_file=None, test_file=None,data_dir=None, cache_data=False):
@@ -17,39 +16,14 @@ class WSIDataModule(L.LightningDataModule):
         self.cache_data = cache_data
 
     def prepare_data(self):
-        # Download / locate your data
         pass
 
-    # def setup(self, stage: str):
-    #     # Assign train/val datasets for use in dataloaders
-    #     if stage == "fit":
-    #         self.train_dataset = WSIDataset(meta_data=self.train_file,
-    #                             root_dir=self.data_dir, 
-    #                             cache_data=self.cache_data,
-    #                             transform=transforms.Compose([ToTensor()]))
-    #         self.dev_dataset = WSIDataset(meta_data=self.dev_file,
-    #                             root_dir=self.data_dir,
-    #                             cache_data=self.cache_data,
-    #                             transform=transforms.Compose([ToTensor()]))
-            
-    #     if stage == "test":
-    #         self.test_dataset = WSIDataset(meta_data=self.test_file,
-    #                                 root_dir=self.data_dir,
-    #                                 cache_data=self.cache_data,
-    #                                 transform=transforms.Compose([ToTensor()]))
-
     def setup(self, stage: str):
-        # Assign train/val datasets for use in dataloaders
         if stage == "fit":
             self.train_dataset = WSIDataset(meta_data=self.train_file,
                                 root_dir=self.data_dir, 
                                 cache_data=self.cache_data,
                                 transform=transforms.Compose([
-                                    #transforms.RandomHorizontalFlip(p=0.4),
-                                    #transforms.ColorJitter(brightness=(0.1,0.5), contrast=(0.5,1)),
-                                    #transforms.GaussianBlur(kernel_size=(15, 15), sigma=(0.1,0.5)),
-                                    #transforms.RandomRotation(degrees=(0, 20)),
-                                    #transforms.Pad(padding=30),
                                     ToTensor(),
                                 ]))
             self.dev_dataset = WSIDataset(meta_data=self.dev_file,
@@ -62,7 +36,6 @@ class WSIDataModule(L.LightningDataModule):
                                     root_dir=self.data_dir,
                                     cache_data=self.cache_data,
                                     transform=transforms.Compose([ToTensor()]))
-
 
     def train_dataloader(self):
         return DataLoader(self.train_dataset, batch_size=self.batch_size,
