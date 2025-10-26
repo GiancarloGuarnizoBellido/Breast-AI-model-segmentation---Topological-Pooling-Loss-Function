@@ -17,22 +17,22 @@ train_par:
   eval_threshold: 0.5
   patience: 30
   early_stopping_flag: True
-  results_path: "/media/stefano/Seagate Expansion Drive/rochester_luis_emilio/LIMICM2_emilio/giancarlo_model/Classification/results_seg/experiment/Tesis_kfold_10_new_data_new_loss_less_patient"
+  results_path: "./results_seg/experiment"
   optimizer:
     name: "AdamW"
   loss_opts:
-    name: "TopologicalPoolingLoss" # BCELoss ; SigmoidFocalLoss; TopologicalPoolingLoss; BCEDiceLoss
-    args:
-      weight: 0.5 # this is for BCELogits (value will be computed automatically) & BCEDiceLoss (you need to input a value, default: 0.1)
+    name: "TopologicalPoolingLoss"
+    args: #The weights used are in the Loss.py archive
+      weight: 0.5 # this is only for BCELogits and BCEDiceLoss
       alpha: 1 # this is only for focal loss
       gamma: 2 # this is only for focal loss
   num_classes: 2
 
 dataset:
   experiment: "experiment"
-  data_dir: "/media/stefano/Seagate Expansion Drive/rochester_luis_emilio/LIMICM2_emilio/giancarlo_model/prueba/3D_fold"
-  train: "/media/stefano/Seagate Expansion Drive/rochester_luis_emilio/LIMICM2_emilio/giancarlo_model/Classification/data_csv_seg/data_20%/data_train_seg_20%.csv"
-  dev: "/media/stefano/Seagate Expansion Drive/rochester_luis_emilio/LIMICM2_emilio/giancarlo_model/Classification/data_csv_seg/data_20%/data_test_seg_20%.csv"
-  test: "/media/stefano/Seagate Expansion Drive/rochester_luis_emilio/LIMICM2_emilio/giancarlo_model/Classification/data_csv_seg/data_20%/data_test_seg_20%.csv"
+  data_dir: "./3D_fold"
+  train: "./data_csv_seg/data_20%/data_train_seg_20%.csv"
+  dev: "./data_csv_seg/data_20%/data_test_seg_20%.csv"
+  test: "./data_csv_seg/data_20%/data_test_seg_20%.csv"
   cache_data: False
   rescale_factor: 128
