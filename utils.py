@@ -196,18 +196,15 @@ def pos_weight_batch(mask):
     size = mask.size()
     pos = torch.sum(mask)
     total_px = (size[-1]**2) * size[0]
-    # print(size, total_px, pos)
     return (total_px - pos) / pos # neg / pos
 
 
 def pos_weight_batch_labels(labels):
-    # Contar las instancias positivas y negativas en el conjunto de datos
-    pos = torch.sum(labels == 1).float()  # Total de etiquetas positivas
-    neg = torch.sum(labels == 0).float()  # Total de etiquetas negativas
-
-    # Calcular el peso para las etiquetas positivas
-    pos_weight = (neg + pos) / (pos + 1e-8)  # Añadir un pequeño valor para evitar la división por cero
+    # Count the positive and negative instances in the dataset
+    pos = torch.sum(labels == 1).float()  # Total positive tags
+    neg = torch.sum(labels == 0).float()  # Total negative tags
+    # Calculate the weight for positive labels
+    pos_weight = (neg + pos) / (pos + 1e-8) # Add a small value to avoid division by zero
     pos_weight_tensor = torch.tensor((10 + 44) / 10, dtype=torch.float32)
-
 
     return pos_weight_tensor
