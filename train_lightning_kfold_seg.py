@@ -42,7 +42,6 @@ def train(dataset_train, dataset_test,conf,k_fold_value):
                                 dev_file=dev_file,test_file=None, data_dir=data_dir, cache_data=cache_data)
     # Image Batch Size: torch.Size([1, 1, 128, 128, 128])
     # Ground Truth Batch Size: torch.Size([1])
-
     data_module.prepare_data()
     data_module.setup(stage="fit")
     results_path = os.path.join(conf.train_par.results_path, conf.dataset.experiment)
@@ -57,9 +56,8 @@ def train(dataset_train, dataset_test,conf,k_fold_value):
     lightning_model =MyModel(model_opts=conf.model_opts, train_par=conf.train_par)
 
     trainer = L.Trainer(
-        #max_epochs=conf.train_par.epochs, accelerator="auto", devices="auto", precision='bf16-mixed',logger=wandb_logger,callbacks=[early_stop_callback,model_checkpoint],
         max_epochs=conf.train_par.epochs, accelerator="auto", devices="auto",logger=wandb_logger,callbacks=[early_stop_callback,model_checkpoint],        
-        default_root_dir=results_path#,log_every_n_steps=46
+        default_root_dir=results_path
     )
     trainer.fit(model=lightning_model, datamodule=data_module)
     return trainer
@@ -72,11 +70,10 @@ if __name__ == "__main__":
     conf = Dict(yaml.safe_load(open(args.config_file, "r")))
 
     k_fold_value=10
-
+    
     #data_csv: 69 malign and benign videos
     #data_csv_new: 60 malign and benign videos
     dir_dataset='./data_csv_new'
- 
     elementos = os.listdir(dir_dataset)
     archivos = [os.path.join(dir_dataset, elemento) for elemento in elementos]
     archivos_ordenados = sorted(archivos, key=lambda x: int(x.split("_")[-1].split(".")[0]))
@@ -84,7 +81,7 @@ if __name__ == "__main__":
     for iteracion in range(0,k_fold_value*2,2):
         print(archivos_ordenados[iteracion])
         print(archivos_ordenados[iteracion+1])
-
+        
     print("INICIO")
     for iteracion in range(0,k_fold_value*2,2):
         dataset_test=archivos_ordenados[iteracion]
