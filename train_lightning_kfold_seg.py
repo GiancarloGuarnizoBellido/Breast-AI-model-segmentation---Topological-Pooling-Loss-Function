@@ -3,15 +3,10 @@ import yaml
 from addict import Dict
 import wandb
 import os
-from sklearn.model_selection import StratifiedKFold
 import torch
-import pandas as pd
-
 from lightning.pytorch.callbacks.early_stopping import EarlyStopping
-from lightning.pytorch.callbacks import LearningRateMonitor, ModelCheckpoint
+from lightning.pytorch.callbacks import ModelCheckpoint
 from lightning.pytorch.loggers import WandbLogger
-import matplotlib.pyplot as plt
-import cv2
 import lightning as L
 from model_lightning_seg import MyModel
 from data_datamodule_seg import WSIDataModule
@@ -54,7 +49,7 @@ def train(dataset_train, dataset_test,conf,k_fold_value):
     os.makedirs(results_path, exist_ok=True)
     conf.train_par.results_model_filename = os.path.join(results_path, f'{tb_exp_name}')
     #wandb logger
-    wandb_logger = WandbLogger(project="3d_a_unet_seg_2", entity="giancarlo-guarnizo",config=conf, name=tb_exp_name)
+    wandb_logger = WandbLogger(project="3d_a_unet_seg", entity="giancarlo-guarnizo",config=conf, name=tb_exp_name)
     early_stop_callback = EarlyStopping(monitor="val_loss", min_delta=0.00, patience=conf.train_par.patience, verbose=True, mode="min")
     model_checkpoint = ModelCheckpoint(
         filename=conf.train_par.results_model_filename, monitor="val_loss", mode="min"
@@ -72,7 +67,7 @@ def train(dataset_train, dataset_test,conf,k_fold_value):
 if __name__ == "__main__":
     
     trainparser = argparse.ArgumentParser(description='[StratifIAD] Parameters for training', allow_abbrev=False)
-    trainparser.add_argument('-c','--config-file', type=str, default='/media/stefano/Seagate Expansion Drive/rochester_luis_emilio/LIMICM2_emilio/giancarlo_model/Classification/default_config_train_seg.yaml')
+    trainparser.add_argument('-c','--config-file', type=str, default='./default_config_train_seg.yaml')
     args = trainparser.parse_args()
     conf = Dict(yaml.safe_load(open(args.config_file, "r")))
 
@@ -80,7 +75,7 @@ if __name__ == "__main__":
 
     #data_csv: 69 malign and benign videos
     #data_csv_new: 60 malign and benign videos
-    dir_dataset='/media/stefano/Seagate Expansion Drive/rochester_luis_emilio/LIMICM2_emilio/giancarlo_model/prueba/data_csv_new'
+    dir_dataset='./data_csv_new'
  
     elementos = os.listdir(dir_dataset)
     archivos = [os.path.join(dir_dataset, elemento) for elemento in elementos]
