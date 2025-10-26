@@ -1,6 +1,5 @@
 import torch 
 import numpy as np
-from skimage import transform
 
 class Rescale(object):
     """Rescale the image in a sample to a given size.
